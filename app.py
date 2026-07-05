@@ -7,8 +7,8 @@ import shutil
 from src.authenticator.authenticate import authenticateuser
 
 # these variables would be later input from the frontend
-start_year = 2000
-end_year = 2026
+start_year = 2005
+end_year = 2015
 geometry_points = [74.4189, 31.4697]
 
 # Load configurations

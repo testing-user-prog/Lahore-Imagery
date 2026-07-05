@@ -14,24 +14,22 @@ def get_coverage_ratio(image, region):
 def find_best_image(earth_enginemodel, geometry_points, start_date, end_date, cloud_prop, extrapolate=False):
     point = ee.Geometry.Point(geometry_points)
     region = point.buffer(2000).bounds()
-
     collection = (ee.ImageCollection(earth_enginemodel)
               .filterBounds(region)
               .filterDate(start_date, end_date)
               .filter(ee.Filter.lt(cloud_prop, 20)))
 
-    
-
-    
     collection_with_coverage = collection.map(lambda img: get_coverage_ratio(img, region))
     well_covered = collection_with_coverage.filter(ee.Filter.gte('coverage_ratio', 0.95))
     final_collection = well_covered.sort(cloud_prop)
-
     count = final_collection.size().getInfo()
     print(f"Found {count} fully-covering, low-cloud images")
 
-    
+    if count == 0:
+        return None, region
+
     return final_collection.first(), region
+
 
 
 def find_composite_image(earth_enginemodel, geometry_points, start_date, end_date, cloud_prop):
@@ -41,13 +39,20 @@ def find_composite_image(earth_enginemodel, geometry_points, start_date, end_dat
     collection = (ee.ImageCollection(earth_enginemodel)
               .filterBounds(region)
               .filterDate(start_date, end_date)
-              .filter(ee.Filter.lt(cloud_prop, 30)))
+              .filter(ee.Filter.lt(cloud_prop, 15)))
 
-    count = collection.size().getInfo()
-    print(f"Found {count} images to build gap-filled composite from")
+    collection_with_coverage = collection.map(lambda img: get_coverage_ratio(img, region))
+    partial_or_better = collection_with_coverage.filter(ee.Filter.gte('coverage_ratio', 0.3))
+    partial_or_better=partial_or_better.sort(cloud_prop)
 
-    return collection.median(), region
+    count = partial_or_better.size().getInfo()
+    print(f"Found {count} images (each covering >=30%) to build composite from")
 
+    if count == 0:
+        return None, region
+
+    composite = partial_or_better.mean()
+    return composite, region
 
 def download_image(image, region, bands, min_val, max_val, imagesavepath, imagename):
     thumb_url = image.getThumbURL({
@@ -78,9 +83,10 @@ def imagefromearthengine(imagesavepath, imagename, start_date, end_date, earth_e
     else:
         image, region = find_composite_image(earth_enginemodel, geometry_points, start_date, end_date, cloud_prop)
 
-    if image is None:
-        print("No fully-covering, low-cloud images found for this date range.")
+    if image == None:
+        print("No good image found for this time range")
         return False
+
 
     info = image.getInfo()
     print("Image ID:", info.get('id', 'Composite (no single ID)'))
