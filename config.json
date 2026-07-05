@@ -31,7 +31,7 @@
       "extrapolate": false
     },
     {
-      "min_year": 1999,
+      "min_year": 2003,
       "earth_engine_model": "LANDSAT/LE07/C02/T1_L2",
       "cloud_prop": "CLOUD_COVER",
       "date_field": "DATE_ACQUIRED",
@@ -43,6 +43,20 @@
       "min_val": 7273,
       "max_val": 18181,
       "extrapolate": true
+    },
+    {
+      "min_year": 1999,
+      "earth_engine_model": "LANDSAT/LE07/C02/T1_L2",
+      "cloud_prop": "CLOUD_COVER",
+      "date_field": "DATE_ACQUIRED",
+      "bands": [
+        "SR_B3",
+        "SR_B2",
+        "SR_B1"
+      ],
+      "min_val": 7273,
+      "max_val": 18181,
+      "extrapolate": false
     },
     {
       "min_year": 0,
