@@ -1,0 +1,62 @@
+{
+  "project_name": "lahore-imagery",
+  "save_path": "src/dataset",
+  "sensors": [
+    {
+      "min_year": 2015,
+      "earth_engine_model": "COPERNICUS/S2_SR_HARMONIZED",
+      "cloud_prop": "CLOUDY_PIXEL_PERCENTAGE",
+      "date_field": "PRODUCT_ID",
+      "bands": [
+        "B4",
+        "B3",
+        "B2"
+      ],
+      "min_val": 0,
+      "max_val": 3000,
+      "extrapolate": false
+    },
+    {
+      "min_year": 2013,
+      "earth_engine_model": "LANDSAT/LC08/C02/T1_L2",
+      "cloud_prop": "CLOUD_COVER",
+      "date_field": "DATE_ACQUIRED",
+      "bands": [
+        "SR_B4",
+        "SR_B3",
+        "SR_B2"
+      ],
+      "min_val": 7273,
+      "max_val": 18181,
+      "extrapolate": false
+    },
+    {
+      "min_year": 1999,
+      "earth_engine_model": "LANDSAT/LE07/C02/T1_L2",
+      "cloud_prop": "CLOUD_COVER",
+      "date_field": "DATE_ACQUIRED",
+      "bands": [
+        "SR_B3",
+        "SR_B2",
+        "SR_B1"
+      ],
+      "min_val": 7273,
+      "max_val": 18181,
+      "extrapolate": true
+    },
+    {
+      "min_year": 0,
+      "earth_engine_model": "LANDSAT/LT05/C02/T1_L2",
+      "cloud_prop": "CLOUD_COVER",
+      "date_field": "DATE_ACQUIRED",
+      "bands": [
+        "SR_B3",
+        "SR_B2",
+        "SR_B1"
+      ],
+      "min_val": 7273,
+      "max_val": 18181,
+      "extrapolate": false
+    }
+  ]
+}

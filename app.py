@@ -1,0 +1,40 @@
+from src.dataloader.sensor_config import saveimage
+import json
+import os
+from datetime import date
+from dateutil.relativedelta import relativedelta
+import shutil
+from src.authenticator.authenticate import authenticateuser
+
+# these variables would be later input from the frontend
+start_year = 2003
+end_year = 2026
+geometry_points = [74.3320, 31.4680]
+
+# Load configurations
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+authenticateuser(config['project_name'])
+
+year_startdate = date(start_year, 1, 1)
+curr_year = start_year
+
+if os.path.exists(config['save_path']):
+    shutil.rmtree(config['save_path'])
+
+while curr_year <= end_year:
+    next_yearfirst = year_startdate + relativedelta(years=1)
+    year_enddate = next_yearfirst - relativedelta(days=1)
+
+    saveimage(
+        start_time=str(year_startdate),
+        end_time=str(year_enddate),
+        geometry_points=geometry_points,
+        image_savepath=config['save_path'],
+        imagename=str(curr_year) + '.png',
+        config=config
+    )
+
+    curr_year += 1
+    year_startdate = next_yearfirst
