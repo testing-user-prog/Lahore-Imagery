@@ -1,3 +1,5 @@
 earthengine-api
 requests
 python-dateutil
+opencv-python
+numpy
