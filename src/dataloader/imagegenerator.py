@@ -46,12 +46,14 @@ def find_composite_image(earth_enginemodel, geometry_points, start_date, end_dat
     partial_or_better=partial_or_better.sort(cloud_prop)
 
     count = partial_or_better.size().getInfo()
-    print(f"Found {count} images (each covering >=30%) to build composite from")
+    
 
     if count == 0:
         return None, region
+    clean_collection = partial_or_better.map(lambda img: img.updateMask(img.neq(0)))
+    
 
-    composite = partial_or_better.mean()
+    composite = clean_collection.median()
     return composite, region
 
 def download_image(image, region, bands, min_val, max_val, imagesavepath, imagename):
