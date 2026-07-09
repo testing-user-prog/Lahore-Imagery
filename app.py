@@ -51,7 +51,9 @@ var1=estimateimageblurfrompicture(grey1)
 var2=estimateimageblurfrompicture(grey2)
 returnstatus,abs_var=getabsvarbyvalues(var1,var2)
 print(returnstatus,abs_var)
-GaussianImageBlur('src/dataset/2015.png',abs_var,'src/dataset/res.png')
+# if returnstatus==True:
+#     #var1>=var2
+
+
 # matchfeatures('src/dataset/2014.png', 'src/dataset/2015.png',f'{config['save_path']}/1.png')
 # print('Task Completed')
-
