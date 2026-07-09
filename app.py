@@ -40,7 +40,9 @@ while curr_year <= end_year:
     curr_year += 1
     year_startdate = next_yearfirst
 
-# print(estimateimageblur('src/dataset/2014.png'))
-# print(estimateimageblur('src/dataset/2015.png'))
+# we will ask the user for the image input like the years whose image he want to compare
+
+print(estimateimageblur('src/dataset/2014.png'))
+print(estimateimageblur('src/dataset/2015.png'))
 # matchfeatures('src/dataset/2014.png', 'src/dataset/2015.png',f'{config['save_path']}/1.png')
 # print('Task Completed')
