@@ -15,3 +15,11 @@ def getabsvarbyvalues(var1,var2):
     return False,var2-var1
 
 
+def getscale_factor(var1, var2):
+    if var1 <= var2:
+        return 1.0
+    predicted_scale = np.sqrt(var2 / var1)
+    return max(0.05, min(0.99, predicted_scale))
+        
+
+

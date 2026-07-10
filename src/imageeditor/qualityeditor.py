@@ -12,13 +12,9 @@ def GaussianImageBlur(img_path,var_diff,path_to_save):
     return blurred_img
 
 #Pixelation
-def decreaseimagequality(img1,img2,score1,score2,scale_factor): #from main score1>score2
+def decreaseimagequality(img1,score1,scale_factor): #from main score1>score2
     #for this function the score of img1 should be greater than the score of the image 2
-    try:
-        if score1<score2:
-            raise Exception("Parameters passed in the incorrect order!")
-    except Exception as error:
-        print(f'An error caught: {error}')
+    
     h,w=img1.shape
 
     low_res_w=int(w*scale_factor)
