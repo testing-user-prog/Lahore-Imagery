@@ -5,10 +5,11 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 import shutil
 from src.authenticator.authenticate import authenticateuser
-from src.changedetector.feature_matcher import matchfeatures
+from src.changedetector.feature_extractor import matchfeatures
 from src.imageprocessor.qualityprocessor import estimateimageblurfrompicture
 from src.imageprocessor.qualityprocessor import getabsvarbyvalues,getscale_factor
-from src.imageeditor.qualityeditor import GaussianImageBlur, decreaseimagequality
+from src.imageeditor.qualitychanger import GaussianImageBlur, decreaseimagequality
+from src.imageeditor.markups import markregions
 import cv2
 # these variables would be later input from the frontend
 start_year = 1984
@@ -46,8 +47,10 @@ curr_year = start_year
 # we will ask the user for the image input like the years whose image he want to compare now hardcoded for 2014 and the 2015
 # grey1 and grey2 is the grey scaled version of image of interest
 # 1. Load images directly into grayscale
-grey1 = cv2.imread('src/dataset/2014.png', cv2.IMREAD_GRAYSCALE)  # Blurry baseline
-grey2 = cv2.imread('src/dataset/2015.png', cv2.IMREAD_GRAYSCALE)  # Sharp target to degrade
+small_year='2014'
+greater_year='2015'
+grey1 = cv2.imread(f'src/dataset/{small_year}.png', cv2.IMREAD_GRAYSCALE)  # Blurry baseline
+grey2 = cv2.imread(f'src/dataset/{greater_year}.png', cv2.IMREAD_GRAYSCALE)  # Sharp target to degrade
 
 # 2. Get initial variance scores
 var1 = estimateimageblurfrompicture(grey1)
@@ -57,7 +60,7 @@ print(var1,var2)
 returnstatus, abs_var = getabsvarbyvalues(var1, var2)
 print(returnstatus, abs_var)
 
-threshold = 0.125
+threshold = 0.3
 scale_factor = getscale_factor(var2,var1)
 
 # Create a copy of grey2 to safely mutate inside the loop
@@ -73,5 +76,25 @@ while scale_factor > threshold and estimateimageblurfrompicture(grey2_processed)
     scale_factor *= 0.95
 
 # 4. Corrected Saving Logic: Save the processed 2015 image to its correct name
-cv2.imwrite("src/dataset/res2015.png", grey2_processed) # This is the newly matched 2015 image
-cv2.imwrite("src/dataset/res2014.png", grey1)           # This is your pristine, untouched 2014 baseline
+cv2.imwrite(f"src/dataset/res{greater_year}.png", grey2_processed) # This is the newly matched 2015 image
+cv2.imwrite(f"src/dataset/res{small_year}.png", grey1)           # This is your pristine, untouched 2014 baseline
+
+# 5. Feature Matching: detect unmatched keypoints (regions of potential change)
+coords_img1, coords_img2 = matchfeatures(
+    f'src/dataset/res{small_year}.png',
+    f'src/dataset/res{greater_year}.png'
+)
+print(f'Unmatched coords in {small_year}: {coords_img1}')
+print(f'Unmatched coords in {greater_year}: {coords_img2}')
+
+# 6. Mark the detected change regions on the original (color) images
+markregions(
+    image_path=f'src/dataset/{small_year}.png',
+    coordinates=coords_img1,
+    save_path=f'src/dataset/marked_{small_year}.png'
+)
+markregions(
+    image_path=f'src/dataset/{greater_year}.png',
+    coordinates=coords_img2,
+    save_path=f'src/dataset/marked_{greater_year}.png'
+)

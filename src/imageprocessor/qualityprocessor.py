@@ -22,4 +22,3 @@ def getscale_factor(var1, var2):
     return max(0.05, min(0.99, predicted_scale))
         
 
-
