@@ -17,7 +17,7 @@ end_year = 2015
 c1 = "2014"
 c2 = "2015"
 geometry_points = [74.4189, 31.4697]
-
+feature_count=10
 # Load configurations
 with open('config.json', 'r') as f:
     config = json.load(f)
@@ -103,7 +103,8 @@ cv2.imwrite(f"src/dataset/res{c1}.png", grey1)            # This is your pristin
 # 5. Feature Matching: detect unmatched keypoints (regions of potential change)
 coords_img1, coords_img2 = matchfeatures(
     f'src/dataset/res{c1}.png',
-    f'src/dataset/res{c2}.png'
+    f'src/dataset/res{c2}.png',
+    feature_count
 )
 print(f'Unmatched coords in {c1}: {coords_img1}')
 print(f'Unmatched coords in {c2}: {coords_img2}')
