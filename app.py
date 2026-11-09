@@ -27,28 +27,31 @@ authenticateuser(config['project_name'])
 year_startdate = date(start_year, 1, 1)
 curr_year = start_year
 
-# if os.path.exists(config['save_path']):
-#     shutil.rmtree(config['save_path'])
+#this fetches and downloads the images
 
-# while curr_year <= end_year:
-#     next_yearfirst = year_startdate + relativedelta(years=1)
-#     year_enddate = next_yearfirst - relativedelta(days=1)
+if os.path.exists(config['save_path']):
+    shutil.rmtree(config['save_path'])
 
-#     saveimage(
-#         start_time=str(year_startdate),
-#         end_time=str(year_enddate),
-#         geometry_points=geometry_points,
-#         image_savepath=config['save_path'],
-#         imagename=str(curr_year) + '.png',
-#         config=config
-#     )
+while curr_year <= end_year:
+    next_yearfirst = year_startdate + relativedelta(years=1)
+    year_enddate = next_yearfirst - relativedelta(days=1)
 
-#     curr_year += 1
-#     year_startdate = next_yearfirst
+    saveimage(
+        start_time=str(year_startdate),
+        end_time=str(year_enddate),
+        geometry_points=geometry_points,
+        image_savepath=config['save_path'],
+        imagename=str(curr_year) + '.png',
+        config=config
+    )
+
+    curr_year += 1
+    year_startdate = next_yearfirst
 
 # we will ask the user for the image input like the years whose image he want to compare
 # grey1 and grey2 is the grey scaled version of image of interest
 # 1. Load images directly into grayscale using c1 and c2
+
 grey1 = cv2.imread(f'src/dataset/{c1}.png', cv2.IMREAD_GRAYSCALE)  # Blurry baseline
 grey2 = cv2.imread(f'src/dataset/{c2}.png', cv2.IMREAD_GRAYSCALE)  # Sharp target to degrade
 if grey1 is None:
